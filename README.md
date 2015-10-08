@@ -18,8 +18,8 @@ You can also have your own GraphQL Starwars example running on locally.
 Just run the following commands and you'll be all set!
 
 ```bash
-git clone git@github.com:graphql-python/django-graphene-example.git
-cd django-graphene-example
+git clone git@github.com:graphql-python/swapi-graphene.git
+cd swapi-graphene
 
 # Install the requirements
 pip install -r requirements_base.txt
@@ -43,6 +43,6 @@ Open your browser and visit [localhost:8080](http://localhost:8080/) et voilá!
 
 To get your own GraphQL Starwars example running on Heroku, click the button below:
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/graphql-python/django-graphene-example)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/graphql-python/swapi-graphene)
 
 Fill out the form, and you should be cooking with gas in a few seconds.
