@@ -1,9 +1,18 @@
-# Django Starwars example using [Graphene](https://github.com/graphql-python/graphene) 
+# GraphQL SWAPI using Graphene 
 
-Graphene is a free, open, simple GraphQL framework for Python. Visit the project's website at <http://graphene-python.org>.
+[Graphene](http://graphene-python.org) is a free, open, simple GraphQL framework for Python.
 
 This is a integration example of Graphene in Django.
-[View working demo](http://swapi.graphene-python.org/)
+[View demo](http://swapi.graphene-python.org/)
+
+
+## Structure
+
+All the [models](./starwars/models.py) and [fixtures](./starwars/fixtures/) are based in the original [swapi repo](https://github.com/phalt/swapi).
+
+The schema is in [starwars/schema.py](./starwars/schema.py).
+> Look ma, a GraphQL integration with Django models in less than 150 LOC!
+
 
 ## Deploying on [Heroku](http://heroku.com)
 
@@ -36,11 +45,3 @@ python manage.py runserver
 ```
 
 Open your browser and visit [localhost:8080](http://localhost:8080/) et voilá!
-
-
-## Structure
-
-All the [models](./starwars/models.py) and [fixtures](./starwars/fixtures/) are copied from the original [swapi repo](https://github.com/phalt/swapi).
-
-The schema is in [starwars/schema.py](./starwars/schema.py).
-> Look ma, a GraphQL integration with Django models in less than 150 LOC!
