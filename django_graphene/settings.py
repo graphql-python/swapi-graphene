@@ -103,3 +103,33 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+GRAPHIQL_DEFAULT_QUERY = '''# Welcome to GraphiQL
+#
+# GraphiQL is an in-browser IDE for writing, validating, and
+# testing GraphQL queries.
+#
+# Type queries into this side of the screen, and you will
+# see intelligent typeaheads aware of the current GraphQL type schema and
+# live syntax and validation errors highlighted within the text.
+#
+# To bring up the auto-complete at any point, just press Ctrl-Space.
+#
+# Press the run button above, or Cmd-Enter to execute the query, and the result
+# will appear in the pane to the right.
+
+{
+  myFavoriteFilm: film(id:"RmlsbToz") {
+    id
+    title
+    episodeId
+    characters(first:5) {
+      edges {
+        node {
+          name
+        }
+      }
+    }
+  }
+}
+'''
