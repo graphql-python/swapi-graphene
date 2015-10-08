@@ -1,0 +1,215 @@
+/* RESET */
+/*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,details,figcaption,figure,footer,header,hgroup,main,menu,nav,section,summary{display:block}audio,canvas,progress,video{display:inline-block;vertical-align:baseline}audio:not([controls]){display:none;height:0}[hidden],template{display:none}a{background-color:transparent}a:active,a:hover{outline:0}abbr[title]{border-bottom:1px dotted}b,strong{font-weight:bold}dfn{font-style:italic}h1{font-size:2em;margin:.67em 0}mark{background:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sup{top:-0.5em}sub{bottom:-0.25em}img{border:0}svg:not(:root){overflow:hidden}figure{margin:1em 40px}hr{box-sizing:content-box;height:0}pre{overflow:auto}code,kbd,pre,samp{font-family:monospace,monospace;font-size:1em}button,input,optgroup,select,textarea{color:inherit;font:inherit;margin:0}button{overflow:visible}button,select{text-transform:none}button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer}button[disabled],html input[disabled]{cursor:default}button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}input{line-height:normal}input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-outer-spin-button{height:auto}input[type="search"]{-webkit-appearance:textfield;box-sizing:content-box}input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit-search-decoration{-webkit-appearance:none}fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}legend{border:0;padding:0}textarea{overflow:auto}optgroup{font-weight:bold}table{border-collapse:collapse;border-spacing:0}td,th{padding:0}
+/* Main styles */
+html{
+	min-height: 100%;
+}
+
+body {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-weight: 300;
+	background: #1A1A1A url('vader_background.png') center bottom no-repeat;
+	font-size: 16px;
+	color: #606060;
+	line-height: 1.5;
+	min-height: 100%;
+}
+
+a {
+	color: #4A4A4A;
+}
+a:hover {
+	color: #222;
+}
+
+
+/* LOGO ANIMATION */
+#main-logo {
+	display: inline-block;
+	vertical-align: middle;
+	text-decoration: none;
+	width: 100px;
+	height: 100px;
+}
+
+#main-logo svg {
+	display: inline-block;
+}
+
+.animated-logo path {
+	stroke-dasharray: 250;
+	stroke-dashoffset: 250;
+	animation: logo-dash .9s ease-in-out forwards;
+	animation-delay: .12s;
+}
+
+.animated-logo g ellipse {
+	animation: logo-dot .3s ease forwards;
+	animation-fill-mode: both;
+	transform-origin: 50% 50%;
+}
+
+.animated-logo g:nth-child(2) ellipse {
+	animation-delay: .1s;
+}
+
+.animated-logo g:nth-child(3) ellipse {
+	animation-delay: .2s;
+}
+
+.animated-logo g:nth-child(4) ellipse {
+	animation-delay: .3s;
+}
+
+.animated-logo g:nth-child(5) ellipse {
+	animation-delay: .4s;
+}
+
+.animated-logo g:nth-child(6) ellipse {
+	animation-delay: .5s;
+}
+
+.animated-logo g:nth-child(7) ellipse {
+	animation-delay: .6s;
+}
+
+.animated-logo g:nth-child(8) ellipse {
+	animation-delay: .7s;
+}
+
+#header {
+	background: #222222;
+	text-align: center;
+	padding: 60px 0;
+}
+
+#starwars {
+	vertical-align: middle;
+	display: inline-block;
+	margin-left: 16px;
+	animation: starwars .6s ease-out forwards;
+	animation-delay: .4s;
+	animation-fill-mode: both;
+	transform-origin: 50% 50%;
+}
+#headline {
+	position: relative;
+}
+
+#headline h1 {
+	margin-top: 60px;
+	padding: 0 20px;
+	font-family: 'Helvetica Neue';
+	font-weight: 100;
+	font-size: 36px;
+	color: #797979;
+	line-height: 44px;
+}
+
+#headline h2 {
+	font-family: 'Helvetica Neue';
+	font-weight: 400;
+	font-size: 16px;
+	padding: 0 20px;
+	color: #4A4A4A;
+	line-height: 20px;
+	text-transform: uppercase;
+	margin-top: -20px;
+	margin-bottom: -10px;
+}
+
+#headline a:hover {
+	color: #666;
+}
+
+#nav {
+	text-align: center;
+	margin: 40px 0;
+}
+
+.nav-item {
+	display: inline-block;
+	vertical-align: top;
+	text-decoration: none;
+	position: relative;
+}
+.nav-box {
+	background: #3C3C3C;
+	width: 200px;
+	margin: 16px;
+	height: 160px;
+	padding: 40px 15px;
+	box-sizing: border-box;
+	transition: all .2s ease-in-out;
+
+}
+#nav:hover .nav-box{
+	background: #222;
+	/*opacity: .3;*/
+}
+
+#nav .nav-item:hover .nav-box{
+	transform: scale(1.05);
+	box-shadow: 0 0px 0px 3px #D06D6D;
+	background: #444;
+}
+
+#nav .nav-item span,
+#nav .nav-item strong {
+	transition: all .2s ease-in-out;
+}
+
+#nav:hover .nav-item span,
+#nav:hover .nav-item strong {
+	opacity: .4;
+}
+#nav .nav-item:hover span,
+#nav .nav-item:hover strong {
+	opacity: 1;
+}
+
+.nav-item strong {
+	font-family: 'Helvetica Neue';
+	font-weight: 100;
+	font-size: 26px;
+	color: #FFFFFF;
+	display: block;
+	line-height: 31px;
+	margin-bottom: 20px;
+}
+.nav-item span {
+	font-family: 'Helvetica Neue';
+	font-weight: 100;
+	font-size: 14px;
+	display: block;
+	color: #B3B3B3;
+	line-height: 15px;
+}
+
+@keyframes logo-dash {
+	to {
+		stroke-dashoffset: 0;
+	}
+}
+
+@keyframes logo-dot {
+	from {
+		opacity: 0.5;
+		transform:scale(0);
+	}
+	to {
+		opacity: 1;
+		transform:scale(1);
+	}
+}
+@keyframes starwars {
+	from {
+		opacity: 0;
+		transform: translateX(-20px);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+

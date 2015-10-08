@@ -25,6 +25,7 @@ from starwars.schema import schema
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url('', include('starwars.urls')),
     url(r'^graphql', csrf_exempt(GraphQLView.as_view(schema=schema))),
     url(r'^graphiql', include('django_graphiql.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -35,7 +35,7 @@ Once you have everything done, just run:
 python manage.py runserver
 ```
 
-Open your browser and visit [localhost:8080](http://localhost:8080/)
+Open your browser and visit [localhost:8080](http://localhost:8080/) et voilá!
 
 
 ## Structure
@@ -43,4 +43,4 @@ Open your browser and visit [localhost:8080](http://localhost:8080/)
 All the [models](./starwars/models.py) and [fixtures](./starwars/fixtures/) are copied from the original [swapi repo](https://github.com/phalt/swapi).
 
 The schema is in [starwars/schema.py](./starwars/schema.py).
-> Look ma, a GraphQL integration with my current Django models in less than 150 LOC!
+> Look ma, a GraphQL integration with Django models in less than 150 LOC!
