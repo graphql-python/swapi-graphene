@@ -1,26 +1,16 @@
 # GraphQL SWAPI using Graphene 
 
-[Graphene](http://graphene-python.org) is a free, open, simple GraphQL framework for Python.
-
-This is a integration example of Graphene in Django.
+This is a integration example of [Graphene](http://graphene-python.org) in Django.
 [View demo](http://swapi.graphene-python.org/)
 
 
 ## Structure
 
-All the [models](./starwars/models.py) and [fixtures](./starwars/fixtures/) are based in the original [swapi repo](https://github.com/phalt/swapi).
+All the [models](./starwars/models.py) and [fixtures](./starwars/fixtures/) are based in the original [swapi project](https://github.com/phalt/swapi).
 
-The schema is in [starwars/schema.py](./starwars/schema.py).
+The schema (*where all the magic happens*) is in [starwars/schema.py](./starwars/schema.py).
 > Look ma, a GraphQL integration with Django models in less than 150 LOC!
 
-
-## Deploying on [Heroku](http://heroku.com)
-
-To get your own GraphQL Starwars example running on Heroku, click the button below:
-
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/graphql-python/django-graphene-example)
-
-Fill out the form, and you should be cooking with gas in a few seconds.
 
 ## Deploying locally
 
@@ -45,3 +35,14 @@ python manage.py runserver
 ```
 
 Open your browser and visit [localhost:8080](http://localhost:8080/) et voilá!
+
+**For querying the schema we recomend using [/graphiql](http://localhost:8080/graphiql)**
+
+
+## Deploying on [Heroku](http://heroku.com)
+
+To get your own GraphQL Starwars example running on Heroku, click the button below:
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/graphql-python/django-graphene-example)
+
+Fill out the form, and you should be cooking with gas in a few seconds.
