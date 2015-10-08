@@ -23,7 +23,7 @@ git clone git@github.com:graphql-python/django-graphene-example.git
 cd django-graphene-example
 
 # Install the requirements
-pip install -r requirements.txt
+pip install -r requirements_base.txt
 
 # Setup the db and load the fixtures
 python manage.py migrate

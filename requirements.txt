@@ -1,4 +1,6 @@
-Django==1.8.5
-graphene[django]==0.1.1
+-r requirements_base.txt
+
+# The production required packages
+
 gunicorn==19.3.0
-django-graphiql==0.3.1.5
+MySQL-python
