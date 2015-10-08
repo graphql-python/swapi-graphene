@@ -13,14 +13,22 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
+import re
+
 from django.conf import settings
 from django.conf.urls import include, url
-from django.conf.urls.static import static
+from django.views.static import serve
 from django.contrib import admin
 from django.views.decorators.csrf import csrf_exempt
 
 from graphene.contrib.django.views import GraphQLView
 from starwars.schema import schema
+
+# Hack for allow static files in prod (Heroku/Dokku)
+def static(prefix, view=serve, **kwargs):
+    return [
+        url(r'^%s(?P<path>.*)$' % re.escape(prefix.lstrip('/')), view, kwargs=kwargs),
+    ]
 
 
 urlpatterns = [

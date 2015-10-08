@@ -1,1 +1,1 @@
-web: gunicorn django_graphene.wsgi --log-file -
+web: gunicorn swapi_graphene.wsgi --log-file -

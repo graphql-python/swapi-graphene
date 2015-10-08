@@ -1,5 +1,5 @@
 """
-WSGI config for django_graphene project.
+WSGI config for swapi_graphene project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "django_graphene.settings_prod")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "swapi_graphene.settings_prod")
 
 application = get_wsgi_application()
