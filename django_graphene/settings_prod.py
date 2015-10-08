@@ -5,7 +5,7 @@ from .settings import *
 DB_NAME = os.environ.get('DB_NAME')
 DB_HOST = os.environ.get('DB_HOST')
 DB_USER = os.environ.get('DB_USER')
-DB_PASSWORD = os.environ.get('DB_PASSWORD')
+DB_PASSWORD = os.environ.get('DB_PASS')
 DB_PORT = os.environ.get('DB_PORT')
 
 if DB_NAME and DB_HOST and DB_USER:
