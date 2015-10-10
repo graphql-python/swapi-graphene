@@ -161,11 +161,3 @@ if DB_NAME and DB_HOST and DB_USER:
             'TEST_COLLATION': 'utf8_general_ci',
         }
     }
-
-DEBUG = False
-
-ALLOWED_HOSTS = [
-    'swapi.graphene-python.org',
-    '.herokuapp.com',
-    'localhost',
-]
