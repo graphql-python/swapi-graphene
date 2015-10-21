@@ -12,11 +12,20 @@ import models
 schema = graphene.Schema(name='Starwars Relay Schema')
 
 
+class Connection(relay.Connection):
+    total_count = graphene.IntField()
+
+    def resolve_total_count(self, args, info):
+        return len(self.get_connection_data())
+
+
 class Person(DjangoNode):
     '''An individual person or character within the Star Wars universe.'''
     class Meta:
         model = models.People
         exclude_fields = ('created', 'edited')
+
+    connection_type = Connection
 
 
 class Planet(DjangoNode):
@@ -24,6 +33,8 @@ class Planet(DjangoNode):
     at the time of 0 ABY.'''
     climates = graphene.ListField(graphene.StringField())
     terrains = graphene.ListField(graphene.StringField())
+
+    connection_type = Connection
 
     @resolve_only_args
     def resolve_climates(self):
@@ -41,6 +52,8 @@ class Planet(DjangoNode):
 class Film(DjangoNode):
     producers = graphene.ListField(graphene.StringField())
 
+    connection_type = Connection
+
     @resolve_only_args
     def resolve_producers(self):
         return [c.strip() for c in self.instance.producer.split(',')]
@@ -56,6 +69,8 @@ class Specie(DjangoNode):
     eye_colors = graphene.ListField(graphene.StringField())
     hair_colors = graphene.ListField(graphene.StringField())
     skin_colors = graphene.ListField(graphene.StringField())
+
+    connection_type = Connection
 
     @resolve_only_args
     def resolve_eye_colors(self):
@@ -79,6 +94,8 @@ class Vehicle(DjangoNode):
     '''A single transport craft that does not have hyperdrive capability'''
     manufacturers = graphene.ListField(graphene.StringField())
 
+    connection_type = Connection
+
     @resolve_only_args
     def resolve_manufacturers(self):
         return [c.strip() for c in self.instance.manufacturer.split(',')]
@@ -91,6 +108,8 @@ class Vehicle(DjangoNode):
 class Starship(DjangoNode):
     '''A single transport craft that has hyperdrive capability.'''
     manufacturers = graphene.ListField(graphene.StringField())
+
+    connection_type = Connection
 
     @resolve_only_args
     def resolve_manufacturers(self):
