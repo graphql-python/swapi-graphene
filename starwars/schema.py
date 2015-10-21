@@ -140,6 +140,7 @@ class Query(graphene.ObjectType):
     planet = relay.NodeField(Planet)
     startship = relay.NodeField(Starship)
     node = relay.NodeField()
+    viewer = graphene.Field('self')
 
     @resolve_only_args
     def resolve_all_films(self, **kwargs):
@@ -164,6 +165,9 @@ class Query(graphene.ObjectType):
     @resolve_only_args
     def resolve_all_starships(self, **kwargs):
         return models.Starship.objects.all()
+
+    def resolve_viewer(self, *args, **kwargs):
+        return self
 
 
 schema.query = Query
