@@ -13,7 +13,7 @@ schema = graphene.Schema(name='Starwars Relay Schema')
 
 
 class Connection(relay.Connection):
-    total_count = graphene.IntField()
+    total_count = graphene.Int()
 
     def resolve_total_count(self, args, info):
         return len(self.get_connection_data())
@@ -31,8 +31,8 @@ class Person(DjangoNode):
 class Planet(DjangoNode):
     '''A large mass, planet or planetoid in the Star Wars Universe,
     at the time of 0 ABY.'''
-    climates = graphene.ListField(graphene.StringField())
-    terrains = graphene.ListField(graphene.StringField())
+    climates = graphene.String().List
+    terrains = graphene.String().List
 
     connection_type = Connection
 
@@ -50,7 +50,7 @@ class Planet(DjangoNode):
 
 
 class Film(DjangoNode):
-    producers = graphene.ListField(graphene.StringField())
+    producers = graphene.String().List
 
     connection_type = Connection
 
@@ -66,9 +66,9 @@ class Film(DjangoNode):
 
 class Specie(DjangoNode):
     '''A type of person or character within the Star Wars Universe.'''
-    eye_colors = graphene.ListField(graphene.StringField())
-    hair_colors = graphene.ListField(graphene.StringField())
-    skin_colors = graphene.ListField(graphene.StringField())
+    eye_colors = graphene.String().List
+    hair_colors = graphene.String().List
+    skin_colors = graphene.String().List
 
     connection_type = Connection
 
@@ -92,7 +92,7 @@ class Specie(DjangoNode):
 
 class Vehicle(DjangoNode):
     '''A single transport craft that does not have hyperdrive capability'''
-    manufacturers = graphene.ListField(graphene.StringField())
+    manufacturers = graphene.String().List
 
     connection_type = Connection
 
@@ -107,7 +107,7 @@ class Vehicle(DjangoNode):
 
 class Starship(DjangoNode):
     '''A single transport craft that has hyperdrive capability.'''
-    manufacturers = graphene.ListField(graphene.StringField())
+    manufacturers = graphene.String().List
 
     connection_type = Connection
 
