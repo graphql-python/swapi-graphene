@@ -4,7 +4,7 @@ sys.setdefaultencoding('utf-8')
 
 import graphene
 from graphene import resolve_only_args, relay
-from graphene.contrib.django import DjangoNode, DjangoConnectionField
+from graphene.contrib.django import DjangoNode, DjangoConnection
 
 import models
 
@@ -12,7 +12,7 @@ import models
 schema = graphene.Schema(name='Starwars Relay Schema')
 
 
-class Connection(relay.Connection):
+class Connection(DjangoConnection):
     total_count = graphene.Int()
 
     def resolve_total_count(self, args, info):
@@ -127,12 +127,12 @@ class Starship(DjangoNode):
 
 
 class Query(graphene.ObjectType):
-    all_films = DjangoConnectionField(Film)
-    all_species = DjangoConnectionField(Specie)
-    all_characters = DjangoConnectionField(Person)
-    all_vehicles = DjangoConnectionField(Vehicle)
-    all_planets = DjangoConnectionField(Planet)
-    all_starships = DjangoConnectionField(Starship)
+    all_films = relay.ConnectionField(Film)
+    all_species = relay.ConnectionField(Specie)
+    all_characters = relay.ConnectionField(Person)
+    all_vehicles = relay.ConnectionField(Vehicle)
+    all_planets = relay.ConnectionField(Planet)
+    all_starships = relay.ConnectionField(Starship)
     film = relay.NodeField(Film)
     specie = relay.NodeField(Specie)
     character = relay.NodeField(Person)
