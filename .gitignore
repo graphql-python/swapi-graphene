@@ -10,6 +10,9 @@ __pycache__/
 # C extensions
 *.so
 
+# Graphene schema
+schema.json
+
 # Distribution / packaging
 .Python
 env/

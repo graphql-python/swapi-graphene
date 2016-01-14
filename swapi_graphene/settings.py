@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_graphiql',
+    'graphene.contrib.django',
     'starwars',
 )
 
@@ -161,3 +162,5 @@ if DB_NAME and DB_HOST and DB_USER:
             'TEST_COLLATION': 'utf8_general_ci',
         }
     }
+
+GRAPHENE_SCHEMA = 'starwars.schema'

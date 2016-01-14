@@ -5,11 +5,13 @@ sys.setdefaultencoding('utf-8')
 import graphene
 from graphene import resolve_only_args, relay
 from graphene.contrib.django import DjangoNode, DjangoConnection
+from graphene.contrib.django.filter import DjangoFilterConnectionField
+from graphene.contrib.django.debug import DjangoDebugPlugin
 
 import models
 
 
-schema = graphene.Schema(name='Starwars Relay Schema')
+schema = graphene.Schema(name='Starwars Relay Schema', plugins=[DjangoDebugPlugin()])
 
 
 class Connection(DjangoConnection):
@@ -24,6 +26,7 @@ class Person(DjangoNode):
     class Meta:
         model = models.People
         exclude_fields = ('created', 'edited')
+        filter_fields = ('name', )
 
     connection_type = Connection
 
@@ -47,8 +50,10 @@ class Planet(DjangoNode):
     class Meta:
         model = models.Planet
         exclude_fields = ('created', 'edited', 'climate', 'terrain')
+        filter_fields = ('name', )
 
 
+@schema.register
 class Film(DjangoNode):
     producers = graphene.String().List
 
@@ -62,6 +67,7 @@ class Film(DjangoNode):
     class Meta:
         model = models.Film
         exclude_fields = ('created', 'edited', 'producer')
+        filter_fields = {'episode_id': ('gt', )}
 
 
 class Specie(DjangoNode):
@@ -127,12 +133,12 @@ class Starship(DjangoNode):
 
 
 class Query(graphene.ObjectType):
-    all_films = relay.ConnectionField(Film)
-    all_species = relay.ConnectionField(Specie)
-    all_characters = relay.ConnectionField(Person)
-    all_vehicles = relay.ConnectionField(Vehicle)
-    all_planets = relay.ConnectionField(Planet)
-    all_starships = relay.ConnectionField(Starship)
+    all_films = DjangoFilterConnectionField(Film)
+    all_species = DjangoFilterConnectionField(Specie)
+    all_characters = DjangoFilterConnectionField(Person)
+    all_vehicles = DjangoFilterConnectionField(Vehicle)
+    all_planets = DjangoFilterConnectionField(Planet)
+    all_starships = DjangoFilterConnectionField(Starship)
     film = relay.NodeField(Film)
     specie = relay.NodeField(Specie)
     character = relay.NodeField(Person)
