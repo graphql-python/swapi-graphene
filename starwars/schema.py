@@ -7,6 +7,7 @@ from graphene import resolve_only_args, relay
 from graphene.contrib.django import DjangoNode, DjangoConnection
 from graphene.contrib.django.filter import DjangoFilterConnectionField
 from graphene.contrib.django.debug import DjangoDebugPlugin
+from graphql_relay.node.node import from_global_id
 
 import models
 
@@ -112,6 +113,16 @@ class Vehicle(DjangoNode):
         filter_fields = {'name': {'startswith'}}
 
 
+class Hero(DjangoNode):
+    '''A hero created by fans'''
+    connection_type = Connection
+
+    class Meta:
+        model = models.Hero
+        exclude_fields = ('created', 'edited')
+        filter_fields = {'name': {'startswith', 'contains'}}
+
+
 class Starship(DjangoNode):
     '''A single transport craft that has hyperdrive capability.'''
     manufacturers = graphene.String().List
@@ -140,12 +151,14 @@ class Query(graphene.ObjectType):
     all_vehicles = DjangoFilterConnectionField(Vehicle)
     all_planets = DjangoFilterConnectionField(Planet)
     all_starships = DjangoFilterConnectionField(Starship)
+    all_heroes = DjangoFilterConnectionField(Hero)
     film = relay.NodeField(Film)
     specie = relay.NodeField(Specie)
     character = relay.NodeField(Person)
     vehicle = relay.NodeField(Vehicle)
     planet = relay.NodeField(Planet)
     startship = relay.NodeField(Starship)
+    hero = relay.NodeField(Hero)
     node = relay.NodeField()
     viewer = graphene.Field('self')
 
@@ -153,4 +166,40 @@ class Query(graphene.ObjectType):
         return self
 
 
+class CreateHero(relay.ClientIDMutation):
+
+    class Input:
+        name = graphene.String(required=True)
+        homeworld_id = graphene.String(required=True)
+
+    hero = graphene.Field(Hero)
+    ok = graphene.Boolean()
+
+    @classmethod
+    def mutate_and_get_payload(cls, input, info):
+        name = input.get('name')
+        homeworld_id = input.get('homeworld_id')
+        assert homeworld_id, 'homeworld_id must be not null'
+        try:
+            homeworld_id = int(homeworld_id)
+        except ValueError:
+            try:
+                resolved = from_global_id(homeworld_id)
+                resolved.type.lower == 'planet', 'The homeworld should be a Planet, but found {}'.format(resolved.type)
+                homeworld_id = resolved.id
+            except:
+                raise Exception("Received wrong Planet id: {}".format(homeworld_id))
+
+        homeworld = Planet._meta.model.objects.get(id=homeworld_id)
+        hero = Hero._meta.model(name=name, homeworld=homeworld)
+        hero.save()
+
+        return CreateHero(hero=hero, ok=bool(hero.id))
+
+
+class Mutation(graphene.ObjectType):
+    create_hero = graphene.Field(CreateHero)
+
+
 schema.query = Query
+schema.mutation = Mutation

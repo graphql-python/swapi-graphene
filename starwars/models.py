@@ -147,3 +147,8 @@ class Film(DateTimeModel):
 
     def __unicode__(self):
         return self.title
+
+
+class Hero(DateTimeModel):
+    name = models.CharField(max_length=100)
+    homeworld = models.ForeignKey(Planet, related_name="heroes")
