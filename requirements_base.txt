@@ -1,3 +1,4 @@
-Django==1.8.5
-graphene[django]==0.5.1
-django-graphiql==0.4.2
+Django==1.9.2
+graphene[django]==0.7.3
+django-graphiql==0.4.4
+django-filter==0.12.0
