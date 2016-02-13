@@ -109,6 +109,7 @@ class Vehicle(DjangoNode):
     class Meta:
         model = models.Vehicle
         exclude_fields = ('created', 'edited', 'manufacturers')
+        filter_fields = {'name': {'startswith'}}
 
 
 class Starship(DjangoNode):
@@ -147,30 +148,6 @@ class Query(graphene.ObjectType):
     startship = relay.NodeField(Starship)
     node = relay.NodeField()
     viewer = graphene.Field('self')
-
-    @resolve_only_args
-    def resolve_all_films(self, **kwargs):
-        return models.Film.objects.all()
-
-    @resolve_only_args
-    def resolve_all_species(self, **kwargs):
-        return models.Species.objects.all()
-
-    @resolve_only_args
-    def resolve_all_characters(self, **kwargs):
-        return models.People.objects.all()
-
-    @resolve_only_args
-    def resolve_all_vehicles(self, **kwargs):
-        return models.Vehicle.objects.all()
-
-    @resolve_only_args
-    def resolve_all_planets(self, **kwargs):
-        return models.Planet.objects.all()
-
-    @resolve_only_args
-    def resolve_all_starships(self, **kwargs):
-        return models.Starship.objects.all()
 
     def resolve_viewer(self, *args, **kwargs):
         return self
