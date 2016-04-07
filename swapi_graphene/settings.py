@@ -138,29 +138,21 @@ GRAPHIQL_DEFAULT_QUERY = '''# Welcome to GraphiQL
 # Change the database setup if we have DB environment
 # vars. Useful for Heroku/Dokku databases
 
-DB_NAME = os.environ.get('DB_NAME')
-DB_HOST = os.environ.get('DB_HOST')
-DB_USER = os.environ.get('DB_USER')
-DB_PASSWORD = os.environ.get('DB_PASS')
-DB_PORT = os.environ.get('DB_PORT')
+DATABASE_URL = os.environ.get('DATABASE_URL')
 
-if DB_NAME and DB_HOST and DB_USER:
+if DATABASE_URL:
+    import environ
+    env = environ.Env()
+
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': DB_NAME,
-            'HOST': DB_HOST,
-            'USER': DB_USER,
-            'PASSWORD': DB_PASSWORD,
-            'PORT': DB_PORT,
+        'default': dict({
             'OPTIONS': {
-                'init_command': 'SET storage_engine=InnoDB',
                 'charset': 'utf8',
                 'use_unicode': True,
             },
             'TEST_CHARSET': 'utf8',
             'TEST_COLLATION': 'utf8_general_ci',
-        }
+        }, **env.db())
     }
 
 GRAPHENE_SCHEMA = 'starwars.schema'
