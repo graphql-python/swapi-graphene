@@ -157,7 +157,7 @@ class Query(graphene.ObjectType):
     character = relay.NodeField(Person)
     vehicle = relay.NodeField(Vehicle)
     planet = relay.NodeField(Planet)
-    startship = relay.NodeField(Starship)
+    starship = relay.NodeField(Starship)
     hero = relay.NodeField(Hero)
     node = relay.NodeField()
     viewer = graphene.Field('self')
