@@ -1,5 +1,5 @@
 Django==1.9.6
-graphene[django]==0.9b1
+graphene[django]==0.9.0
 django-graphiql==0.4.4
 django-filter==0.12.0
 django-environ==0.4.0
