@@ -6,13 +6,13 @@ import graphene
 from graphene import resolve_only_args, relay
 from graphene.contrib.django import DjangoNode, DjangoConnection
 from graphene.contrib.django.filter import DjangoFilterConnectionField
-from graphene.contrib.django.debug import DjangoDebugPlugin
+from graphene.contrib.django.debug import DjangoDebugMiddleware, DjangoDebug
 from graphql_relay.node.node import from_global_id
 
 import models
 
 
-schema = graphene.Schema(name='Starwars Relay Schema', plugins=[DjangoDebugPlugin()])
+schema = graphene.Schema(name='Starwars Relay Schema', middlewares=[DjangoDebugMiddleware()])
 
 
 class Connection(DjangoConnection):
@@ -161,6 +161,8 @@ class Query(graphene.ObjectType):
     hero = relay.NodeField(Hero)
     node = relay.NodeField()
     viewer = graphene.Field('self')
+
+    debug = graphene.Field(DjangoDebug, name='__debug')
 
     def resolve_viewer(self, *args, **kwargs):
         return self
