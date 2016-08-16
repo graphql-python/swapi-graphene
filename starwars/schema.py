@@ -3,42 +3,46 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 import graphene
-from graphene import resolve_only_args, relay
-from graphene.contrib.django import DjangoNode, DjangoConnection
-from graphene.contrib.django.filter import DjangoFilterConnectionField
-from graphene.contrib.django.debug import DjangoDebugMiddleware, DjangoDebug
-from graphql_relay.node.node import from_global_id
+from graphene import resolve_only_args, Node
+from graphene_django import DjangoObjectType
+from graphene_django.filter import DjangoFilterConnectionField
+from graphene_django.debug import DjangoDebugMiddleware, DjangoDebug
 
 import models
 
 
-schema = graphene.Schema(name='Starwars Relay Schema', middlewares=[DjangoDebugMiddleware()])
-
-
-class Connection(DjangoConnection):
+class BaseConnection(graphene.AbstractType):
     total_count = graphene.Int()
 
-    def resolve_total_count(self, args, info):
-        return len(self.get_connection_data())
+    def resolve_total_count(self, args, context, info):
+        return self.length
 
 
-class Person(DjangoNode):
+def connection_for_type(_type):
+    class Connection(BaseConnection, graphene.Connection):
+        class Meta:
+            name = _type._meta.name + 'Connection'
+            node = _type
+
+    return Connection
+
+
+class Person(DjangoObjectType):
     '''An individual person or character within the Star Wars universe.'''
     class Meta:
         model = models.People
         exclude_fields = ('created', 'edited')
         filter_fields = ('name', )
+        interfaces = (Node, )
 
-    connection_type = Connection
+Person.Connection = connection_for_type(Person)
 
 
-class Planet(DjangoNode):
+class Planet(DjangoObjectType):
     '''A large mass, planet or planetoid in the Star Wars Universe,
     at the time of 0 ABY.'''
-    climates = graphene.String().List
-    terrains = graphene.String().List
-
-    connection_type = Connection
+    climates = graphene.List(graphene.String)
+    terrains = graphene.List(graphene.String)
 
     @resolve_only_args
     def resolve_climates(self):
@@ -50,15 +54,15 @@ class Planet(DjangoNode):
 
     class Meta:
         model = models.Planet
+        interfaces = (Node, )
         exclude_fields = ('created', 'edited', 'climate', 'terrain')
         filter_fields = ('name', )
 
+# Planet.Connection = connection_for_type(Planet)
 
-@schema.register
-class Film(DjangoNode):
-    producers = graphene.String().List
 
-    connection_type = Connection
+class Film(DjangoObjectType):
+    producers = graphene.List(graphene.String)
 
     @resolve_only_args
     def resolve_producers(self):
@@ -67,17 +71,18 @@ class Film(DjangoNode):
     '''A single film.'''
     class Meta:
         model = models.Film
+        interfaces = (Node, )
         exclude_fields = ('created', 'edited', 'producer')
         filter_fields = {'episode_id': ('gt', )}
 
+# Film.Connection = connection_for_type(Film)
 
-class Specie(DjangoNode):
+
+class Specie(DjangoObjectType):
     '''A type of person or character within the Star Wars Universe.'''
-    eye_colors = graphene.String().List
-    hair_colors = graphene.String().List
-    skin_colors = graphene.String().List
-
-    connection_type = Connection
+    eye_colors = graphene.List(graphene.String)
+    hair_colors = graphene.List(graphene.String)
+    skin_colors = graphene.List(graphene.String)
 
     @resolve_only_args
     def resolve_eye_colors(self):
@@ -93,15 +98,16 @@ class Specie(DjangoNode):
 
     class Meta:
         model = models.Species
+        interfaces = (Node, )
         exclude_fields = ('created', 'edited', 'eye_colors', 'hair_colors',
                           'skin_colors')
 
+# Specie.Connection = connection_for_type(Specie)
 
-class Vehicle(DjangoNode):
+
+class Vehicle(DjangoObjectType):
     '''A single transport craft that does not have hyperdrive capability'''
-    manufacturers = graphene.String().List
-
-    connection_type = Connection
+    manufacturers = graphene.List(graphene.String)
 
     @resolve_only_args
     def resolve_manufacturers(self):
@@ -109,25 +115,28 @@ class Vehicle(DjangoNode):
 
     class Meta:
         model = models.Vehicle
+        interfaces = (Node, )
         exclude_fields = ('created', 'edited', 'manufacturers')
         filter_fields = {'name': {'startswith'}}
 
+# Vehicle.Connection = connection_for_type(Vehicle)
 
-class Hero(DjangoNode):
+
+class Hero(DjangoObjectType):
     '''A hero created by fans'''
-    connection_type = Connection
 
     class Meta:
         model = models.Hero
+        interfaces = (Node, )
         exclude_fields = ('created', 'edited')
         filter_fields = {'name': {'startswith', 'contains'}}
 
+# Hero.Connection = connection_for_type(Hero)
 
-class Starship(DjangoNode):
+
+class Starship(DjangoObjectType):
     '''A single transport craft that has hyperdrive capability.'''
-    manufacturers = graphene.String().List
-
-    connection_type = Connection
+    manufacturers = graphene.List(graphene.String)
 
     @resolve_only_args
     def resolve_manufacturers(self):
@@ -141,7 +150,10 @@ class Starship(DjangoNode):
 
     class Meta:
         model = models.Starship
+        interfaces = (Node, )
         exclude_fields = ('created', 'edited', 'manufacturers')
+
+# Starship.Connection = connection_for_type(Starship)
 
 
 class Query(graphene.ObjectType):
@@ -152,15 +164,15 @@ class Query(graphene.ObjectType):
     all_planets = DjangoFilterConnectionField(Planet)
     all_starships = DjangoFilterConnectionField(Starship)
     all_heroes = DjangoFilterConnectionField(Hero)
-    film = relay.NodeField(Film)
-    specie = relay.NodeField(Specie)
-    character = relay.NodeField(Person)
-    vehicle = relay.NodeField(Vehicle)
-    planet = relay.NodeField(Planet)
-    starship = relay.NodeField(Starship)
-    hero = relay.NodeField(Hero)
-    node = relay.NodeField()
-    viewer = graphene.Field('self')
+    film = Node.Field(Film)
+    specie = Node.Field(Specie)
+    character = Node.Field(Person)
+    vehicle = Node.Field(Vehicle)
+    planet = Node.Field(Planet)
+    starship = Node.Field(Starship)
+    hero = Node.Field(Hero)
+    node = Node.Field()
+    viewer = graphene.Field(lambda: Query)
 
     debug = graphene.Field(DjangoDebug, name='__debug')
 
@@ -168,7 +180,7 @@ class Query(graphene.ObjectType):
         return self
 
 
-class CreateHero(relay.ClientIDMutation):
+class CreateHero(graphene.ClientIDMutation):
 
     class Input:
         name = graphene.String(required=True)
@@ -203,5 +215,8 @@ class Mutation(graphene.ObjectType):
     create_hero = graphene.Field(CreateHero)
 
 
-schema.query = Query
-schema.mutation = Mutation
+schema = graphene.Schema(
+    query=Query,
+    mutation=Mutation,
+    middlewares=[DjangoDebugMiddleware()],
+)

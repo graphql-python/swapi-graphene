@@ -21,7 +21,7 @@ from django.views.static import serve
 from django.contrib import admin
 from django.views.decorators.csrf import csrf_exempt
 
-from graphene.contrib.django.views import GraphQLView
+from graphene_django.views import GraphQLView
 from starwars.schema import schema
 
 # Hack for allow static files in prod (Heroku/Dokku)

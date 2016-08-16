@@ -38,7 +38,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_graphiql',
-    'graphene.contrib.django',
+    'debug_toolbar',
+    'graphene_django',
     'starwars',
 )
 
