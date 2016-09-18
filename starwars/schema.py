@@ -11,18 +11,16 @@ from graphene_django.debug import DjangoDebugMiddleware, DjangoDebug
 import models
 
 
-class BaseConnection(graphene.AbstractType):
-    total_count = graphene.Int()
-
-    def resolve_total_count(self, args, context, info):
-        return self.length
-
-
 def connection_for_type(_type):
-    class Connection(BaseConnection, graphene.Connection):
+    class Connection(graphene.Connection):
+        total_count = graphene.Int()
+        
         class Meta:
             name = _type._meta.name + 'Connection'
             node = _type
+
+        def resolve_total_count(self, args, context, info):
+            return self.length
 
     return Connection
 
@@ -46,11 +44,11 @@ class Planet(DjangoObjectType):
 
     @resolve_only_args
     def resolve_climates(self):
-        return [c.strip() for c in self.instance.climate.split(',')]
+        return [c.strip() for c in self.climate.split(',')]
 
     @resolve_only_args
     def resolve_terrains(self):
-        return [c.strip() for c in self.instance.terrain.split(',')]
+        return [c.strip() for c in self.terrain.split(',')]
 
     class Meta:
         model = models.Planet
@@ -58,7 +56,7 @@ class Planet(DjangoObjectType):
         exclude_fields = ('created', 'edited', 'climate', 'terrain')
         filter_fields = ('name', )
 
-# Planet.Connection = connection_for_type(Planet)
+Planet.Connection = connection_for_type(Planet)
 
 
 class Film(DjangoObjectType):
@@ -66,7 +64,7 @@ class Film(DjangoObjectType):
 
     @resolve_only_args
     def resolve_producers(self):
-        return [c.strip() for c in self.instance.producer.split(',')]
+        return [c.strip() for c in self.producer.split(',')]
 
     '''A single film.'''
     class Meta:
@@ -75,7 +73,7 @@ class Film(DjangoObjectType):
         exclude_fields = ('created', 'edited', 'producer')
         filter_fields = {'episode_id': ('gt', )}
 
-# Film.Connection = connection_for_type(Film)
+Film.Connection = connection_for_type(Film)
 
 
 class Specie(DjangoObjectType):
@@ -86,15 +84,15 @@ class Specie(DjangoObjectType):
 
     @resolve_only_args
     def resolve_eye_colors(self):
-        return [c.strip() for c in self.instance.eye_colors.split(',')]
+        return [c.strip() for c in self.eye_colors.split(',')]
 
     @resolve_only_args
     def resolve_hair_colors(self):
-        return [c.strip() for c in self.instance.hair_colors.split(',')]
+        return [c.strip() for c in self.hair_colors.split(',')]
 
     @resolve_only_args
     def resolve_skin_colors(self):
-        return [c.strip() for c in self.instance.skin_colors.split(',')]
+        return [c.strip() for c in self.skin_colors.split(',')]
 
     class Meta:
         model = models.Species
@@ -102,7 +100,7 @@ class Specie(DjangoObjectType):
         exclude_fields = ('created', 'edited', 'eye_colors', 'hair_colors',
                           'skin_colors')
 
-# Specie.Connection = connection_for_type(Specie)
+Specie.Connection = connection_for_type(Specie)
 
 
 class Vehicle(DjangoObjectType):
@@ -111,7 +109,7 @@ class Vehicle(DjangoObjectType):
 
     @resolve_only_args
     def resolve_manufacturers(self):
-        return [c.strip() for c in self.instance.manufacturer.split(',')]
+        return [c.strip() for c in self.manufacturer.split(',')]
 
     class Meta:
         model = models.Vehicle
@@ -119,7 +117,7 @@ class Vehicle(DjangoObjectType):
         exclude_fields = ('created', 'edited', 'manufacturers')
         filter_fields = {'name': {'startswith'}}
 
-# Vehicle.Connection = connection_for_type(Vehicle)
+Vehicle.Connection = connection_for_type(Vehicle)
 
 
 class Hero(DjangoObjectType):
@@ -131,7 +129,7 @@ class Hero(DjangoObjectType):
         exclude_fields = ('created', 'edited')
         filter_fields = {'name': {'startswith', 'contains'}}
 
-# Hero.Connection = connection_for_type(Hero)
+Hero.Connection = connection_for_type(Hero)
 
 
 class Starship(DjangoObjectType):
@@ -140,20 +138,20 @@ class Starship(DjangoObjectType):
 
     @resolve_only_args
     def resolve_manufacturers(self):
-        return [c.strip() for c in self.instance.manufacturer.split(',')]
+        return [c.strip() for c in self.manufacturer.split(',')]
 
     @resolve_only_args
     def resolve_max_atmosphering_speed(self):
-        if self.instance.max_atmosphering_speed == 'n/a':
+        if self.max_atmosphering_speed == 'n/a':
             return None
-        return self.instance.max_atmosphering_speed
+        return self.max_atmosphering_speed
 
     class Meta:
         model = models.Starship
         interfaces = (Node, )
         exclude_fields = ('created', 'edited', 'manufacturers')
 
-# Starship.Connection = connection_for_type(Starship)
+Starship.Connection = connection_for_type(Starship)
 
 
 class Query(graphene.ObjectType):
