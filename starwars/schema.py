@@ -14,7 +14,7 @@ import models
 def connection_for_type(_type):
     class Connection(graphene.Connection):
         total_count = graphene.Int()
-        
+
         class Meta:
             name = _type._meta.name + 'Connection'
             node = _type
@@ -191,14 +191,12 @@ class CreateHero(graphene.ClientIDMutation):
     def mutate_and_get_payload(cls, input, info):
         name = input.get('name')
         homeworld_id = input.get('homeworld_id')
-        assert homeworld_id, 'homeworld_id must be not null'
         try:
             homeworld_id = int(homeworld_id)
         except ValueError:
             try:
-                resolved = from_global_id(homeworld_id)
-                resolved.type.lower == 'planet', 'The homeworld should be a Planet, but found {}'.format(resolved.type)
-                homeworld_id = resolved.id
+                _type, homeworld_id = Node.from_global_id(homeworld_id)
+                assert _type == 'planet', 'The homeworld should be a Planet, but found {}'.format(resolved.type)
             except:
                 raise Exception("Received wrong Planet id: {}".format(homeworld_id))
 
