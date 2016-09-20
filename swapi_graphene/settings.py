@@ -156,4 +156,9 @@ if DATABASE_URL:
         }, **env.db())
     }
 
-GRAPHENE_SCHEMA = 'starwars.schema'
+GRAPHENE = {
+    'SCHEMA': 'starwars.schema.schema',
+    'MIDDLEWARE': (
+        'graphene_django.debug.DjangoDebugMiddleware',
+    )
+}

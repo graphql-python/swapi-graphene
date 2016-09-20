@@ -1,5 +1,5 @@
 Django==1.9.6
 graphene_django>=1.0.dev
-django-graphiql==0.4.4
 django-filter==0.12.0
 django-environ==0.4.0
+# debug_toolbar

@@ -39,8 +39,6 @@ python manage.py runserver
 
 Open your browser and visit [localhost:8080](http://localhost:8080/) et voilá!
 
-**For querying the schema we recomend using [/graphiql](http://localhost:8080/graphiql)**
-
 
 ## Deploying on [Heroku](http://heroku.com)
 

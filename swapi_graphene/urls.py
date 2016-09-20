@@ -19,7 +19,6 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.views.static import serve
 from django.contrib import admin
-from django.views.decorators.csrf import csrf_exempt
 
 from graphene_django.views import GraphQLView
 from starwars.schema import schema
@@ -34,6 +33,5 @@ def static(prefix, view=serve, **kwargs):
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url('', include('starwars.urls')),
-    url(r'^graphql', csrf_exempt(GraphQLView.as_view(schema=schema))),
-    url(r'^graphiql', include('django_graphiql.urls')),
+    url(r'^graphql', GraphQLView.as_view(graphiql=True)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
