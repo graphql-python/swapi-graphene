@@ -6,7 +6,7 @@ import graphene
 from graphene import resolve_only_args, Node
 from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
-from graphene_django.debug import DjangoDebugMiddleware, DjangoDebug
+from graphene_django.debug import DjangoDebug
 
 import models
 
@@ -214,5 +214,4 @@ class Mutation(graphene.ObjectType):
 schema = graphene.Schema(
     query=Query,
     mutation=Mutation,
-    middlewares=[DjangoDebugMiddleware()],
 )
