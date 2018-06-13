@@ -178,7 +178,7 @@ class Query(graphene.ObjectType):
         return self
 
 
-class CreateHero(graphene.ClientIDMutation):
+class CreateHero(graphene.Mutation):
 
     class Input:
         name = graphene.String(required=True)
@@ -187,10 +187,9 @@ class CreateHero(graphene.ClientIDMutation):
     hero = graphene.Field(Hero)
     ok = graphene.Boolean()
 
-    @classmethod
-    def mutate_and_get_payload(cls, input, info):
-        name = input.get('name')
-        homeworld_id = input.get('homeworld_id')
+    def mutate(self, args, context, info):
+        name = args.get('name')
+        homeworld_id = args.get('homeworld_id')
         try:
             homeworld_id = int(homeworld_id)
         except ValueError:
@@ -208,10 +207,10 @@ class CreateHero(graphene.ClientIDMutation):
 
 
 class Mutation(graphene.ObjectType):
-    create_hero = graphene.Field(CreateHero)
+    create_hero = CreateHero.Field()
 
 
 schema = graphene.Schema(
     query=Query,
-    mutation=Mutation,
+    mutation=Mutation
 )
