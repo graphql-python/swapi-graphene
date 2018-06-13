@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('edited', models.DateTimeField(auto_now=True)),
                 ('name', models.CharField(max_length=100)),
-                ('homeworld', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='heroes', to='starwars.Planet')),
+                ('homeworld', models.ForeignKey(on_delete=models.CASCADE, related_name='heroes', to='starwars.Planet')),
             ],
             options={
                 'abstract': False,

@@ -1,28 +1,21 @@
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
+from __future__ import unicode_literals
 import graphene
-from graphene import resolve_only_args, Node
+from graphene import Node
 from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.debug import DjangoDebug
 
-import models
+import starwars.models as models
 
 
-def connection_for_type(_type):
-    class Connection(graphene.Connection):
-        total_count = graphene.Int()
+class Connection(graphene.Connection):
+    class Meta:
+        abstract = True
 
-        class Meta:
-            name = _type._meta.name + 'Connection'
-            node = _type
+    total_count = graphene.Int()
 
-        def resolve_total_count(self, args, context, info):
-            return self.length
-
-    return Connection
+    def resolve_total_count(self, info):
+        return self.length
 
 
 class Person(DjangoObjectType):
@@ -32,8 +25,7 @@ class Person(DjangoObjectType):
         exclude_fields = ('created', 'edited')
         filter_fields = ('name', )
         interfaces = (Node, )
-
-Person.Connection = connection_for_type(Person)
+        connection_class = Connection
 
 
 class Planet(DjangoObjectType):
@@ -42,12 +34,10 @@ class Planet(DjangoObjectType):
     climates = graphene.List(graphene.String)
     terrains = graphene.List(graphene.String)
 
-    @resolve_only_args
-    def resolve_climates(self):
+    def resolve_climates(self, info):
         return [c.strip() for c in self.climate.split(',')]
 
-    @resolve_only_args
-    def resolve_terrains(self):
+    def resolve_terrains(self, info):
         return [c.strip() for c in self.terrain.split(',')]
 
     class Meta:
@@ -55,25 +45,22 @@ class Planet(DjangoObjectType):
         interfaces = (Node, )
         exclude_fields = ('created', 'edited', 'climate', 'terrain')
         filter_fields = ('name', )
-
-Planet.Connection = connection_for_type(Planet)
+        connection_class = Connection
 
 
 class Film(DjangoObjectType):
+    '''A single film.'''
     producers = graphene.List(graphene.String)
 
-    @resolve_only_args
-    def resolve_producers(self):
+    def resolve_producers(self, info):
         return [c.strip() for c in self.producer.split(',')]
 
-    '''A single film.'''
     class Meta:
         model = models.Film
         interfaces = (Node, )
         exclude_fields = ('created', 'edited', 'producer')
         filter_fields = {'episode_id': ('gt', )}
-
-Film.Connection = connection_for_type(Film)
+        connection_class = Connection
 
 
 class Specie(DjangoObjectType):
@@ -82,16 +69,13 @@ class Specie(DjangoObjectType):
     hair_colors = graphene.List(graphene.String)
     skin_colors = graphene.List(graphene.String)
 
-    @resolve_only_args
-    def resolve_eye_colors(self):
+    def resolve_eye_colors(self, info):
         return [c.strip() for c in self.eye_colors.split(',')]
 
-    @resolve_only_args
-    def resolve_hair_colors(self):
+    def resolve_hair_colors(self, info):
         return [c.strip() for c in self.hair_colors.split(',')]
 
-    @resolve_only_args
-    def resolve_skin_colors(self):
+    def resolve_skin_colors(self, info):
         return [c.strip() for c in self.skin_colors.split(',')]
 
     class Meta:
@@ -99,16 +83,15 @@ class Specie(DjangoObjectType):
         interfaces = (Node, )
         exclude_fields = ('created', 'edited', 'eye_colors', 'hair_colors',
                           'skin_colors')
-
-Specie.Connection = connection_for_type(Specie)
+        filter_fields = {'name': {'startswith', 'contains'}}
+        connection_class = Connection
 
 
 class Vehicle(DjangoObjectType):
     '''A single transport craft that does not have hyperdrive capability'''
     manufacturers = graphene.List(graphene.String)
 
-    @resolve_only_args
-    def resolve_manufacturers(self):
+    def resolve_manufacturers(self, info):
         return [c.strip() for c in self.manufacturer.split(',')]
 
     class Meta:
@@ -116,8 +99,7 @@ class Vehicle(DjangoObjectType):
         interfaces = (Node, )
         exclude_fields = ('created', 'edited', 'manufacturers')
         filter_fields = {'name': {'startswith'}}
-
-Vehicle.Connection = connection_for_type(Vehicle)
+        connection_class = Connection
 
 
 class Hero(DjangoObjectType):
@@ -128,20 +110,17 @@ class Hero(DjangoObjectType):
         interfaces = (Node, )
         exclude_fields = ('created', 'edited')
         filter_fields = {'name': {'startswith', 'contains'}}
-
-Hero.Connection = connection_for_type(Hero)
+        connection_class = Connection
 
 
 class Starship(DjangoObjectType):
     '''A single transport craft that has hyperdrive capability.'''
     manufacturers = graphene.List(graphene.String)
 
-    @resolve_only_args
-    def resolve_manufacturers(self):
+    def resolve_manufacturers(self, info):
         return [c.strip() for c in self.manufacturer.split(',')]
 
-    @resolve_only_args
-    def resolve_max_atmosphering_speed(self):
+    def resolve_max_atmosphering_speed(self, info):
         if self.max_atmosphering_speed == 'n/a':
             return None
         return self.max_atmosphering_speed
@@ -150,8 +129,8 @@ class Starship(DjangoObjectType):
         model = models.Starship
         interfaces = (Node, )
         exclude_fields = ('created', 'edited', 'manufacturers')
-
-Starship.Connection = connection_for_type(Starship)
+        filter_fields = {'name': {'startswith', 'contains'}}
+        connection_class = Connection
 
 
 class Query(graphene.ObjectType):
@@ -174,11 +153,11 @@ class Query(graphene.ObjectType):
 
     debug = graphene.Field(DjangoDebug, name='__debug')
 
-    def resolve_viewer(self, *args, **kwargs):
+    def resolve_viewer(self, info):
         return self
 
 
-class CreateHero(graphene.Mutation):
+class CreateHero(graphene.ClientIDMutation):
 
     class Input:
         name = graphene.String(required=True)
@@ -187,9 +166,7 @@ class CreateHero(graphene.Mutation):
     hero = graphene.Field(Hero)
     ok = graphene.Boolean()
 
-    def mutate(self, args, context, info):
-        name = args.get('name')
-        homeworld_id = args.get('homeworld_id')
+    def mutate_and_get_payload(self, info, name, homeworld_id, client_id_mutation=None):
         try:
             homeworld_id = int(homeworld_id)
         except ValueError:

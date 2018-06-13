@@ -81,7 +81,7 @@ class Migration(migrations.Migration):
                 ('eye_colors', models.CharField(max_length=200)),
                 ('average_lifespan', models.CharField(max_length=40)),
                 ('language', models.CharField(max_length=40)),
-                ('homeworld', models.ForeignKey(blank=True, to='starwars.Planet', null=True)),
+                ('homeworld', models.ForeignKey(blank=True, to='starwars.Planet', null=True, on_delete=models.CASCADE)),
                 ('people', models.ManyToManyField(related_name='species', to='starwars.People')),
             ],
             options={
@@ -112,7 +112,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Starship',
             fields=[
-                ('transport_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='starwars.Transport')),
+                ('transport_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='starwars.Transport', on_delete=models.CASCADE)),
                 ('hyperdrive_rating', models.CharField(max_length=40)),
                 ('MGLT', models.CharField(max_length=40)),
                 ('starship_class', models.CharField(max_length=40)),
@@ -125,7 +125,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Vehicle',
             fields=[
-                ('transport_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='starwars.Transport')),
+                ('transport_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='starwars.Transport', on_delete=models.CASCADE)),
                 ('vehicle_class', models.CharField(max_length=40)),
             ],
             options={
@@ -136,7 +136,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='people',
             name='homeworld',
-            field=models.ForeignKey(related_name='residents', to='starwars.Planet'),
+            field=models.ForeignKey(related_name='residents', to='starwars.Planet', on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='film',

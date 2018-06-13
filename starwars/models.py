@@ -44,7 +44,7 @@ class People(DateTimeModel):
     eye_color = models.CharField(max_length=20, blank=True)
     birth_year = models.CharField(max_length=10, blank=True)
     gender = models.CharField(max_length=40, blank=True)
-    homeworld = models.ForeignKey(Planet, related_name="residents")
+    homeworld = models.ForeignKey(Planet, related_name="residents", on_delete=models.CASCADE)
 
     def __unicode__(self):
         return self.name
@@ -102,7 +102,7 @@ class Species(DateTimeModel):
     hair_colors = models.CharField(max_length=200)
     eye_colors = models.CharField(max_length=200)
     average_lifespan = models.CharField(max_length=40)
-    homeworld = models.ForeignKey(Planet, blank=True, null=True)
+    homeworld = models.ForeignKey(Planet, blank=True, null=True, on_delete=models.CASCADE)
     language = models.CharField(max_length=40)
     people = models.ManyToManyField(People, related_name="species")
 
@@ -151,4 +151,4 @@ class Film(DateTimeModel):
 
 class Hero(DateTimeModel):
     name = models.CharField(max_length=100)
-    homeworld = models.ForeignKey(Planet, related_name="heroes")
+    homeworld = models.ForeignKey(Planet, related_name="heroes", on_delete=models.CASCADE)
