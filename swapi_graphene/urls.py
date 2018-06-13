@@ -23,15 +23,24 @@ from django.contrib import admin
 from graphene_django.views import GraphQLView
 from starwars.schema import schema
 
+from graphql import GraphQLDeciderBackend, GraphQLCachedBackend, GraphQLCoreBackend
+from graphql.backend.quiver_cloud import GraphQLQuiverCloudBackend
+
 # Hack for allow static files in prod (Heroku/Dokku)
 def static(prefix, view=serve, **kwargs):
     return [
         url(r'^%s(?P<path>.*)$' % re.escape(prefix.lstrip('/')), view, kwargs=kwargs),
     ]
 
+backend = GraphQLDeciderBackend([
+    # GraphQLCachedBackend(GraphQLQuiverCloudBackend(
+    #     'https://******@api.graphql-quiver.com'
+    # )),
+    GraphQLCoreBackend()
+])
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url('', include('starwars.urls')),
-    url(r'^graphql', GraphQLView.as_view(graphiql=True)),
+    url(r'^graphql', GraphQLView.as_view(graphiql=True, backend=backend)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
